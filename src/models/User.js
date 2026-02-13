@@ -38,7 +38,14 @@ const userSchema =  new mongoose.Schema({
         type: String,
         required:true,
         minlength: 10,
-        lowercase:true
+       
+    },
+    bio :{
+        type: String,
+        default : "Hello! A Friendly heart excited to meet amazing people."
     }
 
-},)
+},{timestamps:true},)
+
+const User = mongoose.model("User",userSchema)
+module.exports = User
