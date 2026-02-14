@@ -1,0 +1,6 @@
+
+
+
+const HashConverter = async(pass)=>{
+
+}

@@ -1,12 +1,16 @@
 const express = require("express");
-
+const bcrypt = require("bcrypt")
 const connectDB = require("./config/db.js");
 const User = require("./models/User.js")
 const validator = require("validator")
 
 
+const {signUp, logIn }= require("./Handlers/authHandlers.js");
+const cookieParser = require("cookie-parser");
+
 const app = express();
 app.use(express.json())
+app.use(cookieParser())
 connectDB()
   .then(() => {
     console.log("Database Connected ! ");
@@ -19,47 +23,13 @@ connectDB()
   });
 
 
-app.post("/signup",async(req,res)=>{
+app.post("/signup",signUp)
 
-  let {name , email , password } = req.body
-  console.log(req.body);
   
-  try {
-    if(!validator.isEmail(email) ){
-            throw new Error("need correct credentials")
-    }
-     if(!validator.isStrongPassword(password) ){
-            throw new Error("need Strong Password ")
-    }
-    password = password.trim()
-    const user = new User({name,email,password})
-    await user.save()
-    res.send("User added successfully")
-    
-  } catch (error) {
-     res.send("Error ! "+ error.message)
-  }
+app.post("/login",logIn)
 
-})
+app.get("/profile",async(req,res)=>{
+  console.log(req.cookies);
   
-app.get("/login",async(req,res)=>{
-  let { email , password} = req.body
-  console.log(req.body);
-  
-  try {
-     const user = await User.findOne({email: email})
-     console.log(user);
-     password = password.toLowerCase()
-     
-     if(password == user.password){
-      res.send("Login Successfull ! ")
-     }
-     else {
-      res.send("Invalid credentials ! ")
-     }
-  } catch (error) {
-      res.send("Error "+error.message)
-    
-  }
-
+  res.send("cookie reading ! ")
 })
