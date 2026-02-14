@@ -1,11 +1,6 @@
 const express = require("express");
-const bcrypt = require("bcrypt")
 const connectDB = require("./config/db.js");
-const User = require("./models/User.js")
-const validator = require("validator")
-
-
-const {signUp, logIn }= require("./Handlers/authHandlers.js");
+const authRouter = require("./routes/authRoutes.js")
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -23,13 +18,4 @@ connectDB()
   });
 
 
-app.post("/signup",signUp)
-
-  
-app.post("/login",logIn)
-
-app.get("/profile",async(req,res)=>{
-  console.log(req.cookies);
-  
-  res.send("cookie reading ! ")
-})
+app.use("/",authRouter)
