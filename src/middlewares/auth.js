@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const { SECRET_KEY } = require("../../constant")
 const User = require("../models/User")
 
-const auth = async(req,next)=>{
+const auth = async(req,res,next)=>{
     try {
          const {token} = req.cookies
          const decodedMessage =  jwt.verify(token,SECRET_KEY)
@@ -19,3 +19,5 @@ const auth = async(req,next)=>{
         
     }
 }
+
+module.exports = auth
