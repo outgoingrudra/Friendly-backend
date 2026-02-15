@@ -3,6 +3,7 @@ const connectDB = require("./config/db.js");
 const authRouter = require("./routes/authRoutes.js")
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/userRoutes.js");
+const connectionRouter = require("./routes/connectionRequestRoute.js");
 
 const app = express();
 app.use(express.json())
@@ -21,3 +22,4 @@ connectDB()
 
 app.use("/",authRouter)
 app.use("/user/",userRouter)
+app.use("/connection/",connectionRouter)

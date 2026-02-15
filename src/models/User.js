@@ -34,6 +34,7 @@ const userSchema =  new mongoose.Schema({
         type:String,
         lowercase:true,
         trim: true,
+        enum : []
 
     },
     password :{
@@ -45,7 +46,12 @@ const userSchema =  new mongoose.Schema({
     bio :{
         type: String,
         default : "Hello! A Friendly heart excited to meet amazing people."
+    },
+    imageUrl :{
+        type: String,
+        default : "https://i.pinimg.com/originals/47/77/ae/4777ae0906dd0113ad0bb00d61125d1b.jpg"
     }
+
 
 },{timestamps:true},)
 
