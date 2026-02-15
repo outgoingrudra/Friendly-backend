@@ -50,7 +50,7 @@ const ConnectedProfiles = async(req,res)=>{
             {toUserId : loggedInUser._id , status : "accepted"},
             {fromUserId : loggedInUser._id , status : "accepted"},
            ]
-       }).populate("fromUserId","name , bio , imageUrl").populate("toUserId","name , bio , imageUrl")
+       }).populate("fromUserId","name  bio  imageUrl").populate("toUserId","name  bio  imageUrl")
        
 
        const data = friends.map((row)=>{
@@ -72,4 +72,56 @@ const ConnectedProfiles = async(req,res)=>{
    }
 
 }
-module.exports = {profile, connectionRequests,ConnectedProfiles}
+
+
+const feeds = async(req,res)=>{
+   try {
+      const loggedInUser = req.user
+      const page = parseInt(req.query.page) || 1
+      const limit = parseInt(req.query.limit) || 10
+      const skip = (page-1)*limit
+
+      if(limit > 100)
+         return  res.json({
+         message : " limit is too high"
+         })
+
+      const connections = await Connection.find({
+         $or :[
+              {fromUserId : loggedInUser._id} ,
+              {toUserId : loggedInUser._id} 
+         ]
+      })
+
+      const hideUsersFromFeed = new Set()
+      connections.forEach((req)=>{
+         hideUsersFromFeed.add(req.fromUserId.toString())
+         hideUsersFromFeed.add(req.toUserId.toString())
+        })
+
+        const users = await User.find({
+         $and :[
+            {_id : {$nin : Array.from(hideUsersFromFeed)}},
+            { _id : {$ne : loggedInUser._id}}
+         ]
+        }).select("name bio imageUrl").skip(skip).limit(limit)
+
+        res.json({
+         message : "feed fetched ",
+         data : users
+        })
+
+
+
+
+   } catch (error) {
+       res.json({
+         message : "feed not fetched ",
+         
+        })
+      
+   }
+
+}
+
+module.exports = {profile, connectionRequests,ConnectedProfiles,feeds}
