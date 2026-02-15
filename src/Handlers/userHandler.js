@@ -1,3 +1,4 @@
+const Connection = require("../models/Connection")
 const User = require("../models/User")
 
 const profile = async(req,res)=>{
@@ -19,4 +20,24 @@ const profile = async(req,res)=>{
    }
 }
 
-module.exports = {profile}
+
+const connectionRequests = async(req,res)=>{
+   try {
+      const loggedInUser = req.user
+      const connections = await Connection.find({
+         toUserId : loggedInUser._id,
+         status : "interested"
+      })
+      res.json({
+         message : "Data fetched !",
+         data : connections
+      })
+      
+   } catch (error) {
+      res.status(500).json({
+         message : " Error : "+ error.message
+      })
+      
+   }
+}
+module.exports = {profile, connectionRequests}

@@ -23,13 +23,13 @@ const connectionSchema = new mongoose.Schema({
 
 connectionSchema.index({fromUserId : 1, toUserId:1})
 
-connectionSchema.pre("save",function(next){
+connectionSchema.pre("save",function(){
     const crequest = this
     if(crequest.fromUserId.equals(crequest.toUserId)){
         throw new Error("can't send request to yourself ")
 
     }
-    next()
+    
 })
 
 const Connection = new mongoose.model("Connection",connectionSchema)
